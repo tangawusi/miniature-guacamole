@@ -1,45 +1,39 @@
-# Welcome to AJ Enterprises Group Challenge
+# AJE Challenge Solution
 
-This challenge is created to test your knowledge of creating Symfony Applications with SPA Frontend build using ReactJS.
-In order to start working your solution, please clone this repository and create a copy under your namespace. 
-Consider also to change name of your project to make it harder to find your solution by other competitors.
+This solution keeps the challenge as a Symfony application with a React SPA frontend, exactly in the spirit of the original README. It implements:
 
-**DO NOT FORK THIS REPOSITORY, THIS WILL ALLOW OTHERS TO COPY YOUR SOLUTION**
+- registration
+- account confirmation through a persisted email file in `var/emails`
+- login
+- note creation
+- note search by title/content text
+- filtering by status
+- filtering by category
 
-## Challenge
+## Run
 
-Based on this bare-bones application create a service that will allow:
-* registration of a user
-* confirming account by clicking a link from email. (no need to send actual email, email can be persisted as a file in var/emails directory)
-* users to login
-* users to create notes
-* each note should have fields
-  * title
-  * content
-  * category
-  * status (new, todo, done)
-* list of notes should have possibility to search notes by text from title/content, a select list for statuses and another select list for categories.
+```bash
+cp .env.dist .env
+composer install
+yarn install
+docker-compose up -d
+php bin/console doctrine:migrations:migrate --no-interaction
+yarn watch
+```
 
-To finish this challenge you have 24h since the moment of receiving this email. Remember to push your last changes before the end of the deadline.
-We will be evaluating your solution based on the time of the commit. And remember to send us back link to your solution on GitHub.
+Then open `http://localhost:81/`.
 
-Good look.
+## Flow
 
-## Help notes
+1. Register a user.
+2. Open the generated file in `var/emails/`.
+3. Visit the verification URL inside that file.
+4. Log in.
+5. Create notes and filter them from the SPA.
 
-### Requirements
-To run this project you will need:
-* Docker: >24
-* Docker Compose: >1.29
-* NodeJS: >18
-* PHP: >7.4
+## Architecture notes
 
-### First steps:
-
-    $ cp .env.dist .env
-    $ composer install
-    $ yarn install
-    $ docker-compose up -d
-    $ yarn watch
-
-After running this set of commands, without errors; you should be able to open `http://localhost:81/` and see `Hello World!!!` in the middle of the page.
+- Backend exposes JSON endpoints under `/api`.
+- Frontend is a single React SPA mounted at `/`.
+- Authentication uses Symfony Security with an entity-backed user provider.
+- Verification emails are intentionally stored as files to match the challenge requirement.
